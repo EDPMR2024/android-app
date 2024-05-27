@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import fr.ec.app.R
 
-class PostAdapter(private val dataSource: List<Post>) : RecyclerView.Adapter<PostViewHolder>() {
+class PostAdapter() : RecyclerView.Adapter<PostViewHolder>() {
 
+    private var dataSource = mutableListOf<Post>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-       return if(viewType == R.layout.post_item_big) {
+        return if (viewType == R.layout.post_item_big) {
             PostViewHolder(
                 itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.post_item_big, parent, false)
@@ -20,6 +21,11 @@ class PostAdapter(private val dataSource: List<Post>) : RecyclerView.Adapter<Pos
                     .inflate(R.layout.post_item, parent, false)
             )
         }
+    }
+
+    fun show(post: List<Post>) {
+        dataSource = post.toMutableList()
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {

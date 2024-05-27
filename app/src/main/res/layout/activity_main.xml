@@ -7,10 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="56dp"
-            android:id="@+id/list_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp" />
 
 </FrameLayout>
