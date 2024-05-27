@@ -1,15 +1,15 @@
-package fr.ec.app
+package fr.ec.app.ui
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import fr.ec.app.R
 
 class PostAdapter(private val dataSource: List<Post>) : RecyclerView.Adapter<PostViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-       return if(viewType == R.layout.post_item_big ) {
+       return if(viewType == R.layout.post_item_big) {
             PostViewHolder(
                 itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.post_item_big, parent, false)

@@ -1,9 +1,9 @@
-package fr.ec.app
+package fr.ec.app.ui
 
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
+import fr.ec.app.R
 
 class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val titleTextView = itemView.findViewById<TextView>(R.id.title)
