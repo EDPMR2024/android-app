@@ -1,72 +1,75 @@
 package fr.ec.app.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import fr.ec.app.R
 import fr.ec.app.data.DataProvider
-import fr.ec.app.data.api.response.PostResponse
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
+    private val swipeRefresh by lazy { findViewById<SwipeRefreshLayout>(R.id.swipeRefresh) }
+    private val list by lazy { findViewById<RecyclerView>(R.id.list_item) }
+    private val progressBar by lazy { findViewById<ProgressBar>(R.id.progress_circular) }
     private val adapter = PostAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        setupInsets()
+        setupToolbar()
+        setupRecyclerView()
 
-        val list = findViewById<RecyclerView>(R.id.list_item)
-        val progressBar = findViewById<ProgressBar>(R.id.progress_circular)
+        loadPosts()
+        swipeRefresh.setOnRefreshListener {
+            onRefresh(swipeRefresh)
+        }
+    }
+
+    private fun setupToolbar() {
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Product List" // Set
+    }
+
+    private fun setupRecyclerView() {
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = adapter
-
-        progressBar.visibility = View.VISIBLE
-
-        getPosts(onSuccess = { posts ->
-            runOnUiThread {
-                list.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                adapter.show(posts)
-            }
-        })
     }
 
-    private fun getPosts(onSuccess: (List<Post>) -> Unit) {
-
-        DataProvider.getPosts(
-            onSuccess = { postResponses ->
-                Log.d("MainActivity", "Result: $postResponses")
-                val posts = postResponses.map { postResponse ->
-                    Post(
-                        title = postResponse.name.orEmpty(),
-                        subTitle = postResponse.tagline.orEmpty()
-                    )
-
-                }
-                onSuccess(posts)
-            },
-            onError = { exception ->
-                Log.e("MainActivity", "Error : $exception")
-            }
-        )
+    private fun loadPosts() {
+        lifecycleScope.launch {
+            progressBar.visibility = View.VISIBLE
+            val post = getPosts()
+            adapter.show(post)
+            list.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        }
     }
 
+    private fun onRefresh(swipeRefresh: SwipeRefreshLayout) {
+        lifecycleScope.launch {
+            val post = getPosts()
+            adapter.show(post)
+            swipeRefresh.isRefreshing = false
+        }
+    }
+    private suspend fun getPosts(): List<Post> {
+        val postResponseList = DataProvider.getPosts()
+        return postResponseList.map { postResponse ->
+            Post(
+                title = postResponse.name.orEmpty(),
+                subTitle = postResponse.tagline.orEmpty()
+            )
 
-    private fun setupInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
         }
     }
 }
