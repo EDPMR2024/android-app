@@ -43,10 +43,15 @@ dependencies {
     implementation(libs.google.gson)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.constraintlayout)
+    implementation (libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.picasso)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 
 }

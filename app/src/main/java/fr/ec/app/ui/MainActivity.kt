@@ -3,11 +3,8 @@ package fr.ec.app.ui
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         loadPosts()
         swipeRefresh.setOnRefreshListener {
-            onRefresh(swipeRefresh)
+            onRefresh()
         }
     }
 
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onRefresh(swipeRefresh: SwipeRefreshLayout) {
+    private fun onRefresh() {
         lifecycleScope.launch {
             val post = getPosts()
             adapter.show(post)
@@ -67,7 +64,8 @@ class MainActivity : AppCompatActivity() {
         return postResponseList.map { postResponse ->
             Post(
                 title = postResponse.name.orEmpty(),
-                subTitle = postResponse.tagline.orEmpty()
+                subTitle = postResponse.tagline.orEmpty(),
+                imageUrl = postResponse.thumbnail?.url.orEmpty()
             )
 
         }
