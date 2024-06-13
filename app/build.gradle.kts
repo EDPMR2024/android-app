@@ -48,6 +48,8 @@ dependencies {
     implementation (libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.picasso)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
 
 
     testImplementation(libs.junit)
